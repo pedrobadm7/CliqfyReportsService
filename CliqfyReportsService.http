@@ -1,0 +1,6 @@
+@CliqfyReportsService_HostAddress = http://localhost:5062
+
+GET {{CliqfyReportsService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
