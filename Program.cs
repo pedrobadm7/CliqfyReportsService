@@ -8,6 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowNodeAPI", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") 
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // Add Entity Framework
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -44,10 +54,11 @@ app.MapGet("/reports/daily", async (ApplicationDbContext db) =>
         cancelledOrders,
         completionRate = Math.Round(completionRate, 2)
     };
-    
+
     return report;
 })
 .WithName("GetDailyReport")
 .WithOpenApi();
 
+app.UseCors("AllowNodeAPI");
 app.Run();
